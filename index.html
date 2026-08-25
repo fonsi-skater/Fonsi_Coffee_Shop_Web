@@ -3,515 +3,596 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ember &amp; Oak — Modern Coffee Subscription</title>
+<title>Ember &amp; Oak — Coffee Roasters, Portland</title>
+<meta name="description" content="Small-batch specialty coffee, roasted to order in Portland and delivered on your schedule.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&amp;family=Instrument+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FAF6EF;
-  --surface:#F1E8DA;
-  --card:#FFFDF8;
-  --ink:#291D14;
-  --muted:#77644F;
-  --accent:#C2703D;
-  --accent-deep:#9E5527;
-  --dark:#241A12;
-  --cream-on-dark:#F5EDDF;
-  --line:rgba(41,29,20,.14);
-  --radius:20px;
+  --paper:#F1EFE8;
+  --paper-2:#E4E3DA;
+  --ink:#121826;
+  --ink-soft:#4B5568;
+  --accent:#2C4CC6;
+  --accent-deep:#1F3796;
+  --line:rgba(18,24,38,.18);
+  --line-strong:rgba(18,24,38,.45);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Instrument Sans',Helvetica,Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  font-family:'Inter',system-ui,sans-serif;
-  background:var(--bg);
+  font-family:var(--sans);
+  background:var(--paper);
   color:var(--ink);
-  line-height:1.6;
+  line-height:1.55;
   -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
-img,svg{display:block}
+body::after{
+  content:"";position:fixed;inset:0;z-index:120;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+img{display:block;width:100%;height:100%;object-fit:cover}
 a{text-decoration:none;color:inherit}
-button,input{font:inherit;color:inherit}
-::selection{background:#EAD4BB}
-:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:6px}
-.container{width:min(1140px,92%);margin-inline:auto}
-h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;line-height:1.08;letter-spacing:-.01em}
+button,input{font:inherit;color:inherit;background:none;border:none}
+button{cursor:pointer}
+::selection{background:var(--accent);color:var(--paper)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.container{width:min(1240px,calc(100% - clamp(2.5rem,6vw,5rem)));margin-inline:auto}
+
+.mono{font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow{display:flex;align-items:center;gap:.8rem;color:var(--ink-soft)}
+.eyebrow::before{content:"";width:2.2rem;height:1px;background:var(--line-strong)}
+.serif-i{font-family:var(--serif);font-style:italic;font-weight:400}
+
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  padding:.95rem 1.9rem;border-radius:999px;border:1.5px solid transparent;
-  font-weight:600;font-size:.95rem;cursor:pointer;
-  transition:transform .25s ease,box-shadow .25s ease,background .25s ease,color .25s ease,border-color .25s ease;
+  display:inline-flex;align-items:center;gap:.7rem;
+  padding:1rem 1.6rem;border-radius:2px;
+  font-family:var(--mono);font-size:.74rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--ink);color:var(--ink);
+  transition:background .3s ease,color .3s ease,border-color .3s ease;
 }
-.btn-primary{background:var(--ink);color:var(--bg)}
-.btn-primary:hover{background:var(--accent-deep);transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(158,85,39,.55)}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-accent:hover{background:var(--accent-deep);transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(158,85,39,.55)}
-.btn-ghost{border-color:var(--ink);color:var(--ink);background:transparent}
-.btn-ghost:hover{background:var(--ink);color:var(--bg)}
-.btn-sm{padding:.65rem 1.35rem;font-size:.86rem}
-.tag{
-  display:inline-flex;align-items:center;gap:.45rem;
-  padding:.4rem .95rem;border-radius:999px;
-  background:var(--surface);color:var(--muted);
-  font-size:.75rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;
-}
-.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
-section{padding:clamp(4.5rem,9vw,7.5rem) 0}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.22,.61,.36,1) var(--d,0s)}
+.btn svg{transition:transform .3s ease}
+.btn:hover svg{transform:translateX(4px)}
+.btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-line:hover{background:var(--ink);color:var(--paper)}
+
+.link-u{position:relative;padding-bottom:2px}
+.link-u::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:currentColor;transform-origin:right;transition:transform .35s cubic-bezier(.65,.05,.36,1)}
+.link-u:hover::after{transform:scaleX(.4);transform-origin:left}
+
+section{padding:clamp(4.5rem,9vw,8.5rem) 0}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease var(--d,0s),transform .8s cubic-bezier(.22,.61,.36,1) var(--d,0s)}
 .reveal.visible{opacity:1;transform:none}
-header{
-  position:fixed;inset:0 0 auto;z-index:50;
-  transition:background .3s ease,border-color .3s ease,backdrop-filter .3s ease;
-  border-bottom:1px solid transparent;
-}
-header.scrolled{background:rgba(250,246,239,.88);backdrop-filter:blur(12px);border-bottom-color:var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:76px}
-.logo{font-family:'Fraunces',serif;font-size:1.32rem;font-weight:600;display:flex;align-items:center;gap:.6rem}
-.logo-mark{width:34px;height:34px;border-radius:50%;background:var(--accent);display:grid;place-items:center;flex:none}
-.nav-links{display:flex;gap:2.2rem;list-style:none;font-size:.92rem;font-weight:500;color:var(--muted)}
-.nav-links a{position:relative;padding:.25rem 0;transition:color .2s}
+
+.grain-img{position:relative;overflow:hidden;background:var(--paper-2)}
+.grain-img img{filter:saturate(.88) contrast(1.04) brightness(.98);transition:transform 1s cubic-bezier(.22,.61,.36,1)}
+
+header{position:fixed;inset:0 0 auto;z-index:80;border-bottom:1px solid transparent;transition:background .35s ease,border-color .35s ease}
+header.scrolled{background:rgba(241,239,232,.9);backdrop-filter:blur(10px);border-bottom-color:var(--line)}
+.topbar{text-align:center;background:var(--ink);color:var(--paper);padding:.55rem 1rem;max-height:3em;overflow:hidden;transition:max-height .4s ease,padding .4s ease,opacity .3s ease}
+header.scrolled .topbar{max-height:0;padding-block:0;opacity:0}
+.topbar span{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase}
+.topbar em{color:#9FB6EC;font-style:normal}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{font-family:var(--serif);font-size:1.28rem;font-weight:500;letter-spacing:-.01em;display:flex;align-items:center;gap:.55rem}
+.logo sup{font-family:var(--mono);font-size:.55rem;top:-.7em;color:var(--accent)}
+.nav-links{display:flex;gap:2.4rem;list-style:none;font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft)}
 .nav-links a:hover{color:var(--ink)}
-.nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);border-radius:2px;transition:width .25s ease}
-.nav-links a:hover::after{width:100%}
-.nav-cta{display:flex;align-items:center;gap:.9rem}
-.cart-btn{position:relative;background:none;border:none;cursor:pointer;padding:.45rem;display:grid;place-items:center;border-radius:50%}
-.cart-btn:hover{background:var(--surface)}
+.nav-right{display:flex;align-items:center;gap:1.4rem}
+.nav-right .subscribe-link{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase}
+.cart-btn{position:relative;padding:.4rem;display:grid;place-items:center;border-radius:2px}
+.cart-btn:hover{color:var(--accent)}
 .cart-count{
-  position:absolute;top:-2px;right:-4px;min-width:18px;height:18px;padding:0 4px;
-  border-radius:999px;background:var(--accent);color:#fff;font-size:.67rem;font-weight:700;
+  position:absolute;top:-4px;right:-7px;min-width:17px;height:17px;padding:0 4px;
+  border-radius:999px;background:var(--accent);color:#fff;font-family:var(--mono);font-size:.62rem;font-weight:500;
   display:grid;place-items:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1);
 }
 .cart-count.pop{transform:scale(1.5)}
-.hamburger{display:none;background:none;border:none;cursor:pointer;width:42px;height:42px;border-radius:50%;place-items:center}
-.hamburger:hover{background:var(--surface)}
+.hamburger{display:none;width:40px;height:40px;place-items:center;border-radius:2px;margin-right:-.5rem}
+.hamburger:hover{color:var(--accent)}
 .mobile-menu{
-  position:fixed;top:76px;left:0;right:0;z-index:49;
-  background:rgba(250,246,239,.97);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);
-  padding:1.4rem 5% 2rem;display:none;flex-direction:column;gap:1.15rem;
-  font-weight:500;color:var(--muted);
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:70;background:var(--paper);
+  display:none;flex-direction:column;justify-content:center;padding:0 8%;gap:1.6rem;
+  font-family:var(--serif);font-size:clamp(2rem,8vw,3rem);
 }
 .mobile-menu.open{display:flex}
-.mobile-menu a:hover{color:var(--ink)}
-.hero{padding-top:calc(76px + clamp(3rem,7vw,5.5rem));padding-bottom:clamp(2.5rem,6vw,4.5rem)}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2.5rem,6vw,5rem);align-items:center}
-.hero h1{font-size:clamp(2.9rem,6.4vw,4.8rem);margin:1.3rem 0 1.2rem}
-.hero h1 em{font-style:italic;color:var(--accent)}
-.lede{font-size:1.12rem;color:var(--muted);max-width:31rem;margin-bottom:2.2rem}
-.hero-actions{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.6rem}
-.hero-stats{display:flex;gap:clamp(1.5rem,4vw,2.75rem);border-top:1px solid var(--line);padding-top:1.6rem}
-.stat b{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;display:block;line-height:1.25}
-.stat span{font-size:.82rem;color:var(--muted)}
-.hero-visual{position:relative;aspect-ratio:1/1.04}
-.hero-blob{
-  position:absolute;inset:5% 3%;
-  background:linear-gradient(145deg,#EDDFC8,#E0CAA9 55%,#D2B28A);
-  border-radius:38% 62% 58% 42%/45% 40% 60% 55%;
-  box-shadow:inset 0 -34px 70px rgba(120,80,40,.16);
-  animation:morph 14s ease-in-out infinite alternate;
+.mobile-menu a{border-bottom:1px solid var(--line);padding-bottom:1rem;display:flex;justify-content:space-between;align-items:baseline}
+.mobile-menu a small{font-family:var(--mono);font-size:.68rem;color:var(--ink-soft);letter-spacing:.12em}
+
+.hero{padding:clamp(8rem,16vh,11rem) 0 clamp(2.5rem,5vw,4rem)}
+.hero-title{font-family:var(--serif);font-weight:340;line-height:.94;letter-spacing:-.02em;font-size:clamp(3.4rem,10.5vw,9.2rem)}
+.hero-title .row{display:block}
+.hero-title em{font-style:italic;font-weight:320;color:var(--accent)}
+.hero-title .stroke{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.chip{
+  display:inline-block;width:clamp(2.6rem,7vw,5.6rem);height:clamp(1.9rem,4.6vw,3.9rem);
+  border-radius:999px;overflow:hidden;vertical-align:middle;background:var(--paper-2);
+  margin:0 .06em;
 }
-@keyframes morph{to{border-radius:55% 45% 42% 58%/50% 62% 38% 50%}}
-.cup{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);width:60%}
-.steam path{fill:none;stroke:#FBF6EC;stroke-width:6;stroke-linecap:round;opacity:0;stroke-dasharray:52;animation:steam 3.4s ease-in-out infinite}
-.steam path:nth-child(2){animation-delay:1s}
-.steam path:nth-child(3){animation-delay:2s}
-@keyframes steam{0%{stroke-dashoffset:52;opacity:0}30%{opacity:.9}100%{stroke-dashoffset:-44;opacity:0}}
-.bean{
-  position:absolute;border-radius:50%;background:var(--dark);
-  box-shadow:inset 7px -5px 0 rgba(250,246,239,.32);
-  animation:float 6s ease-in-out infinite;
+.chip img{transition:transform 1.2s cubic-bezier(.22,.61,.36,1)}
+.hero-title:hover .chip img{transform:scale(1.15) rotate(-2deg)}
+.hero-lower{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end;margin-top:clamp(2.2rem,5vw,3.6rem)}
+.hero-copy{max-width:34ch;color:var(--ink-soft);font-size:1.02rem}
+.hero-ctas{display:flex;gap:.8rem;flex-wrap:wrap}
+.hero-meta{display:flex;gap:2rem;border-top:1px solid var(--line);margin-top:clamp(2.5rem,5vw,4rem);padding-top:1rem;color:var(--ink-soft);flex-wrap:wrap}
+.hero-meta span{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase}
+.hero-figure{position:relative;margin-top:clamp(2.5rem,5vw,4rem)}
+.hero-frame{aspect-ratio:16/8.5}
+.stamp{
+  position:absolute;top:-58px;right:clamp(1rem,6vw,4rem);width:118px;height:118px;
+  color:var(--ink);z-index:2;
 }
-.bean::after{content:"";position:absolute;inset:14% 45%;border-radius:50%;background:rgba(250,246,239,.26)}
-.bean.b1{width:46px;height:58px;top:3%;left:7%;transform:rotate(-24deg)}
-.bean.b2{width:36px;height:46px;top:15%;right:5%;background:var(--accent-deep);animation-delay:1.2s;transform:rotate(28deg)}
-.bean.b3{width:30px;height:40px;bottom:11%;right:11%;animation-delay:2.2s;transform:rotate(-40deg)}
-.bean.b4{width:26px;height:34px;bottom:3%;left:15%;background:var(--accent);animation-delay:3s;transform:rotate(16deg)}
-@keyframes float{50%{translate:0 -14px}}
-.hero-badge{
-  position:absolute;bottom:7%;right:0;
-  background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:.75rem 1.05rem;box-shadow:0 20px 44px -20px rgba(41,29,20,.35);
-  font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:.6rem;
-  animation:float 7s ease-in-out infinite .9s;
+.stamp .disc{animation:spin 16s linear infinite;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stamp text{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;fill:currentColor;text-transform:uppercase}
+
+.marquee{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.95rem 0;white-space:nowrap}
+.marquee-track{display:inline-flex;animation:scroll 30s linear infinite}
+.marquee span{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+  display:inline-flex;align-items:center;
 }
-.marquee{overflow:hidden;background:var(--dark);color:var(--cream-on-dark);padding:1.05rem 0;white-space:nowrap}
-.marquee-track{display:inline-flex;gap:3rem;padding-right:3rem;animation:scroll 28s linear infinite}
-.marquee span{font-family:'Fraunces',serif;font-style:italic;font-size:.98rem;letter-spacing:.04em;display:inline-flex;align-items:center;gap:3rem}
-.marquee span::after{content:"✦";color:var(--accent);font-style:normal;font-size:.8rem}
+.marquee span::after{content:"·";margin:0 2.2rem;color:var(--accent)}
 @keyframes scroll{to{transform:translateX(-50%)}}
-.section-head{max-width:34rem}
-.section-head h2{font-size:clamp(2rem,4vw,2.85rem);margin:1.1rem 0 .9rem}
-.section-head p{color:var(--muted)}
-.split-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem}
-.filters{display:flex;gap:.6rem;flex-wrap:wrap;padding-bottom:.4rem}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.tint-1{background:#DBDFEA}
+.tint-2{background:#CFD9D4}
+.tint-3{background:#D8D3E4}
+.tint-4{background:#DDE0E8}
+.tint-5{background:#D6DCE9}
+.tint-6{background:#CBD2E0}
+.values{padding-top:clamp(3rem,6vw,5rem)}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--line)}
+.value{padding:2.2rem 2rem 2.4rem 0;border-right:1px solid var(--line)}
+.value:last-child{border-right:none}
+.value:not(:first-child){padding-left:2rem}
+.value .idx{font-family:var(--mono);font-size:.68rem;color:var(--accent);letter-spacing:.14em}
+.value h3{font-family:var(--serif);font-weight:420;font-size:1.45rem;margin:.9rem 0 .5rem;letter-spacing:-.01em}
+.value p{color:var(--ink-soft);font-size:.93rem;max-width:30ch}
+
+.shop-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
+.shop-head h2,.banner h2,.process-head h2{font-family:var(--serif);font-weight:360;font-size:clamp(2.4rem,5.4vw,4.4rem);line-height:1.02;letter-spacing:-.02em;margin-top:1.1rem}
+.shop-head h2 em,.process-head h2 em{font-style:italic;color:var(--accent);font-weight:340}
+.filters{display:flex;gap:1.8rem;padding-bottom:.55rem}
 .filter{
-  padding:.55rem 1.25rem;border-radius:999px;border:1.5px solid var(--line);
-  background:transparent;font-size:.86rem;font-weight:600;color:var(--muted);
-  cursor:pointer;transition:all .25s ease;
+  font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);position:relative;padding-bottom:4px;
 }
-.filter:hover{border-color:var(--ink);color:var(--ink)}
-.filter.active{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2.6rem}
-.card{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:.9rem .9rem 1.35rem;display:flex;flex-direction:column;
-  transition:transform .35s ease,box-shadow .35s ease;
-}
-.card:hover{transform:translateY(-8px);box-shadow:0 30px 50px -24px rgba(41,29,20,.28)}
+.filter::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.65,.05,.36,1)}
+.filter:hover{color:var(--ink)}
+.filter.active{color:var(--ink)}
+.filter.active::after{transform:scaleX(1)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.4rem,3vw,2.4rem) clamp(1.2rem,2.5vw,2rem);margin-top:clamp(2.5rem,5vw,4rem);row-gap:clamp(2.5rem,5vw,3.5rem)}
+.card{display:flex;flex-direction:column}
 .card.hide{display:none}
-.card-media{position:relative;border-radius:14px;aspect-ratio:4/3.2;display:grid;place-items:center;margin-bottom:1.15rem;overflow:hidden}
-.bag{width:42%;transition:transform .45s cubic-bezier(.22,.61,.36,1)}
-.card:hover .bag{transform:scale(1.07) rotate(-3deg)}
-.tint-1{background:linear-gradient(135deg,#F3E5CF,#E5CBA8);color:#A9743F}
-.tint-2{background:linear-gradient(135deg,#DCE3D2,#C2CFB0);color:#66714F}
-.tint-3{background:linear-gradient(135deg,#EBD6C4,#DBB391);color:#9C562B}
-.tint-4{background:linear-gradient(135deg,#EFDDD3,#DFB9A5);color:#A05A3E}
-.tint-5{background:linear-gradient(135deg,#EEE3CE,#D9C49E);color:#83603C}
-.tint-6{background:linear-gradient(135deg,#E4D6CB,#C7AC96);color:#5F4630}
+.card-media{aspect-ratio:4/4.7}
+.card:hover .card-media img{transform:scale(1.06)}
 .roast-pill{
-  position:absolute;top:.75rem;left:.75rem;
-  background:rgba(255,253,248,.92);border-radius:999px;padding:.32rem .72rem;
-  font-size:.67rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  display:flex;align-items:center;gap:.45rem;
+  position:absolute;top:.9rem;left:.9rem;z-index:2;
+  background:rgba(241,239,232,.92);backdrop-filter:blur(3px);
+  padding:.34rem .7rem;font-family:var(--mono);font-size:.62rem;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;
 }
-.roast-dots{display:inline-flex;gap:3px}
-.roast-dots i{width:6px;height:6px;border-radius:50%;background:rgba(41,29,20,.18)}
-.roast-dots i.on{background:var(--accent-deep)}
-.card h3{font-size:1.26rem;padding:0 .45rem}
-.notes{display:flex;flex-wrap:wrap;gap:.4rem;padding:.6rem .45rem 1rem;list-style:none}
-.notes li{font-size:.74rem;font-weight:600;color:var(--muted);background:var(--surface);padding:.24rem .68rem;border-radius:999px}
-.card-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding:0 .45rem}
-.price{font-family:'Fraunces',serif;font-size:1.32rem;font-weight:600}
-.price small{font-size:.72rem;color:var(--muted);font-weight:500;font-family:'Inter',sans-serif}
+.card-info{padding-top:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+.card-info h3{font-family:var(--serif);font-weight:450;font-size:1.42rem;letter-spacing:-.01em}
+.notes{color:var(--ink-soft);font-size:.88rem}
+.card-foot{margin-top:.75rem;display:flex;align-items:center;justify-content:space-between}
+.price{font-family:var(--mono);font-size:.85rem;letter-spacing:.05em}
+.price small{color:var(--ink-soft);font-size:.72rem}
 .add-btn{
-  width:42px;height:42px;border-radius:50%;border:none;background:var(--ink);
-  color:var(--bg);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center;
-  transition:background .25s,transform .2s;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line-strong);
+  display:grid;place-items:center;font-size:1.15rem;line-height:0;color:var(--ink);
+  transition:background .3s ease,color .3s ease,border-color .3s ease,transform .25s ease;
 }
-.add-btn:hover{background:var(--accent-deep);transform:scale(1.1)}
-.add-btn.added{background:var(--accent)}
-.steps{background:var(--surface)}
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2.6rem}
-.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.8rem 1.6rem}
-.step-num{font-family:'Fraunces',serif;font-style:italic;font-size:2.2rem;color:var(--accent);line-height:1}
-.step h3{font-size:1.22rem;margin:.9rem 0 .5rem}
-.step p{color:var(--muted);font-size:.94rem}
-.quote{text-align:center;max-width:44rem;margin-inline:auto}
-.quote blockquote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.45}
-.quote blockquote::before{content:"“";color:var(--accent)}
-.quote blockquote::after{content:"”";color:var(--accent)}
-.quote cite{display:block;margin-top:1.2rem;font-style:normal;font-size:.88rem;color:var(--muted)}
-.newsletter-band{
-  background:var(--dark);color:var(--cream-on-dark);
-  border-radius:28px;padding:clamp(2.5rem,6vw,4.5rem);
-  text-align:center;position:relative;overflow:hidden;
+.add-btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper);transform:scale(1.06)}
+.add-btn.added{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.banner{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.banner .container{position:relative;z-index:2}
+.banner-bg{position:absolute;inset:0;opacity:.22}
+.banner-bg img{filter:saturate(.8)}
+.banner h2 em{font-style:italic;color:#9FB6EC;font-weight:340}
+.banner p{max-width:46ch;color:rgba(241,239,232,.72);margin:1.4rem 0 2.2rem}
+.banner .btn{border-color:var(--paper);color:var(--paper)}
+.banner .btn:hover{background:var(--paper);color:var(--ink)}
+.banner-inner{max-width:52rem}
+
+.process{background:var(--paper-2)}
+.process-head{max-width:40rem}
+.process-rows{margin-top:clamp(2.5rem,5vw,4rem);border-top:1px solid var(--line-strong)}
+.prow{
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(1.2rem,4vw,4rem);align-items:baseline;
+  padding:2rem 0;border-bottom:1px solid var(--line-strong);
+  transition:padding-left .35s cubic-bezier(.22,.61,.36,1);
 }
-.newsletter-band::before,.newsletter-band::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(90px);opacity:.28}
-.newsletter-band::before{background:var(--accent);top:-130px;left:-80px}
-.newsletter-band::after{background:#8A5A33;bottom:-140px;right:-60px}
-.newsletter-inner{position:relative;z-index:1;max-width:34rem;margin-inline:auto}
-.newsletter-inner h2{font-size:clamp(1.9rem,4vw,2.65rem);margin-bottom:.8rem}
-.newsletter-inner p{color:rgba(245,237,223,.72);margin-bottom:1.8rem}
-.nl-form{
-  display:flex;gap:.5rem;background:rgba(255,255,255,.06);
-  border:1px solid rgba(245,237,223,.22);padding:.4rem;border-radius:999px;
-  transition:border-color .25s ease;
+.prow:hover{padding-left:1.2rem}
+.prow .num{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.14em}
+.prow h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.3rem);letter-spacing:-.01em}
+.prow p{color:var(--ink-soft);font-size:.94rem;max-width:38ch}
+
+.quote{text-align:center}
+.quote blockquote{
+  font-family:var(--serif);font-style:italic;font-weight:330;
+  font-size:clamp(1.7rem,4.4vw,3.3rem);line-height:1.18;letter-spacing:-.015em;
+  max-width:22ch;margin-inline:auto;text-wrap:balance;
 }
-.nl-form:focus-within{border-color:var(--accent)}
-.nl-form input{flex:1;background:transparent;border:none;outline:none;padding:.7rem 1.1rem;min-width:0}
-.nl-form input::placeholder{color:rgba(245,237,223,.45)}
-.nl-msg{margin-top:.9rem;font-size:.88rem;min-height:1.4em}
-.nl-msg.ok{color:#C4DAAC}
-.nl-msg.err{color:#EBA98D}
-.nl-small{margin-top:.35rem;font-size:.76rem;color:rgba(245,237,223,.45)}
-.plan-picker{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.quote blockquote .qm{color:var(--accent)}
+.quote cite{display:block;margin-top:1.8rem;font-style:normal;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.subscribe{padding-top:0}
+.subscribe-band{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.subscribe-bg{position:absolute;inset:0;opacity:.16}
+.subscribe-bg img{filter:saturate(.7)}
+.subscribe-inner{position:relative;z-index:2;padding:clamp(3.5rem,8vw,6.5rem) clamp(1.5rem,6vw,5rem);text-align:center}
+.subscribe-inner .eyebrow{justify-content:center;color:rgba(241,239,232,.6)}
+.subscribe-inner h2{font-family:var(--serif);font-weight:340;font-size:clamp(2.2rem,5.4vw,4.2rem);line-height:1.04;letter-spacing:-.02em;margin:1.2rem auto 1rem;max-width:20ch;text-wrap:balance}
+.subscribe-inner h2 em{font-style:italic;color:#9FB6EC;font-weight:320}
+.subscribe-inner>p{color:rgba(241,239,232,.68);max-width:52ch;margin:0 auto 2.2rem}
+.plan-picker{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:2.2rem}
 .plan-pill{
-  padding:.55rem 1.15rem;border-radius:999px;cursor:pointer;
-  background:rgba(255,255,255,.06);border:1px solid rgba(245,237,223,.22);
-  color:rgba(245,237,223,.75);font-size:.85rem;font-weight:600;
-  transition:all .25s ease;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;
+  padding:.7rem 1.25rem;border:1px solid rgba(241,239,232,.35);border-radius:999px;
+  color:rgba(241,239,232,.75);
+  transition:border-color .3s ease,background .3s ease,color .3s ease;
 }
-.plan-pill:hover{border-color:var(--accent);color:var(--cream-on-dark)}
+.plan-pill:hover{border-color:#9FB6EC;color:var(--paper)}
 .plan-pill.selected{background:var(--accent);border-color:var(--accent);color:#fff}
-footer{padding:clamp(3rem,6vw,4.5rem) 0 2.2rem}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:3rem}
-.foot-brand p{color:var(--muted);font-size:.92rem;max-width:17rem;margin-top:1rem}
-footer h4{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-weight:600}
-footer ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;font-size:.92rem}
-footer ul a:hover{color:var(--accent-deep)}
-.foot-bottom{
-  border-top:1px solid var(--line);padding-top:1.4rem;
-  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
-  font-size:.82rem;color:var(--muted);
+.nl-form{
+  display:flex;gap:1.2rem;align-items:flex-end;max-width:34rem;margin-inline:auto;
+  border-bottom:1px solid rgba(241,239,232,.45);padding-bottom:.8rem;
+  transition:border-color .3s ease;
 }
-@media (max-width:960px){
-  .hero-grid{grid-template-columns:1fr;text-align:center}
-  .lede{margin-inline:auto}
-  .hero-actions,.hero-stats{justify-content:center}
-  .hero-visual{max-width:470px;width:100%;margin-inline:auto}
+.nl-form:focus-within{border-color:#9FB6EC}
+.nl-form input{
+  flex:1;background:none;border:none;outline:none;min-width:0;
+  font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--paper);
+}
+.nl-form input::placeholder{color:rgba(241,239,232,.42)}
+#nlBtn{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--paper);display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 0;
+  transition:color .3s ease;
+}
+#nlBtn:hover{color:#9FB6EC}
+#nlBtn:hover svg{transform:translateX(4px)}
+#nlBtn svg{transition:transform .3s ease}
+#nlBtn:disabled{opacity:.5;cursor:wait}
+.nl-msg{margin-top:1.2rem;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;min-height:1.5em}
+.nl-msg.ok{color:#AEBBD4}
+.nl-msg.err{color:#E39B72}
+.nl-small{margin-top:.5rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(241,239,232,.4)}
+
+footer{background:var(--ink);color:var(--paper);padding:clamp(3.5rem,7vw,6rem) 0 1.5rem}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2.5rem;padding-bottom:3.5rem}
+.foot-brand p{color:rgba(241,239,232,.6);font-size:.93rem;max-width:26ch;margin-top:1.1rem}
+footer h4{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(241,239,232,.5);margin-bottom:1.1rem}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;font-size:.92rem;color:rgba(241,239,232,.82)}
+footer ul a:hover{color:#9FB6EC}
+.foot-word{
+  font-family:var(--serif);font-weight:340;letter-spacing:-.03em;line-height:.85;
+  font-size:clamp(3.4rem,12.5vw,11.5rem);white-space:nowrap;text-align:center;
+  color:transparent;-webkit-text-stroke:1px rgba(241,239,232,.55);
+  padding-bottom:2.5rem;user-select:none;
+}
+.foot-word span{color:var(--paper);-webkit-text-stroke:0}
+.foot-bottom{
+  border-top:1px solid rgba(241,239,232,.18);padding-top:1.3rem;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(241,239,232,.45);
+}
+
+@media (max-width:1020px){
   .grid{grid-template-columns:repeat(2,1fr)}
-  .steps-grid{grid-template-columns:1fr;max-width:30rem;margin-left:auto;margin-right:auto}
+  .values-grid{grid-template-columns:1fr}
+  .value{border-right:none;border-bottom:1px solid var(--line);padding-left:0!important;padding-right:0!important}
+  .value:last-child{border-bottom:none}
   .foot-grid{grid-template-columns:1fr 1fr}
 }
-@media (max-width:640px){
-  .nav-links,.nav-cta .btn{display:none}
+@media (max-width:720px){
+  .nav-links,.nav-right .subscribe-link{display:none}
   .hamburger{display:grid}
-  .grid{grid-template-columns:1fr}
-  .nl-form{flex-direction:column;border-radius:24px}
-  .nl-form .btn{width:100%}
-  .hero-stats{gap:1.4rem}
-  .stat b{font-size:1.2rem}
+  .hero-lower{grid-template-columns:1fr;align-items:start}
+  .prow{grid-template-columns:auto 1fr}
+  .prow p{grid-column:2}
+  .stamp{width:88px;height:88px;top:-40px}
+  .nl-form{flex-direction:row}
+  .hero-meta{gap:1.2rem}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
   .reveal{opacity:1;transform:none}
+  body::after{display:none}
 }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="bag" viewBox="0 0 100 120">
-    <path d="M18 26h64a6 6 0 0 1 6 6v74a10 10 0 0 1-10 10H22a10 10 0 0 1-10-10V32a6 6 0 0 1 6-6z" fill="currentColor"/>
-    <rect x="14" y="12" width="72" height="15" rx="5" fill="currentColor" opacity=".55"/>
-    <rect x="32" y="56" width="36" height="30" rx="5" fill="#FAF6EF"/>
-    <ellipse cx="50" cy="71" rx="7" ry="11" fill="#C2703D"/>
-  </symbol>
-</svg>
+<div class="topbar"><span>Free carbon-neutral shipping over $40 &nbsp;·&nbsp; <em>Next roast day: Monday</em></span></div>
 
 <header id="header">
   <div class="container nav">
     <a class="logo" href="#">
-      <span class="logo-mark">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" fill="#FAF6EF"/><path d="M12 2.5v19" stroke="#C2703D" stroke-width="2"/></svg>
-      </span>
-      Ember &amp; Oak
+      Ember &amp; Oak<sup>®</sup>
     </a>
     <nav aria-label="Primary">
       <ul class="nav-links">
-        <li><a href="#shop">Coffee</a></li>
-        <li><a href="#process">How it works</a></li>
-        <li><a href="#reviews">Reviews</a></li>
-        <li><a href="#subscribe">Subscribe</a></li>
+        <li><a href="#shop" class="link-u">Shop</a></li>
+        <li><a href="#process" class="link-u">Process</a></li>
+        <li><a href="#reviews" class="link-u">Reviews</a></li>
       </ul>
     </nav>
-    <div class="nav-cta">
-      <a class="btn btn-primary btn-sm" href="#subscribe">Start subscription</a>
+    <div class="nav-right">
+      <a class="subscribe-link link-u" href="#subscribe">Subscribe</a>
       <button class="cart-btn" aria-label="Cart">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#291D14" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8.5h13l-.9 11a1.8 1.8 0 0 1-1.8 1.6H8.2a1.8 1.8 0 0 1-1.8-1.6l-.9-11z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg>
         <span class="cart-count" id="cartCount">0</span>
       </button>
       <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#291D14" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3.5 7.5h17M3.5 12h17M3.5 16.5h17"/></svg>
       </button>
     </div>
   </div>
 </header>
 
 <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
-  <a href="#shop">Coffee</a>
-  <a href="#process">How it works</a>
-  <a href="#reviews">Reviews</a>
-  <a href="#subscribe">Subscribe</a>
+  <a href="#shop"><span>Shop</span><small>01</small></a>
+  <a href="#process"><span>Process</span><small>02</small></a>
+  <a href="#reviews"><span>Reviews</span><small>03</small></a>
+  <a href="#subscribe"><span>Subscribe</span><small>04</small></a>
 </nav>
 
 <main>
   <section class="hero">
-    <div class="container hero-grid">
-      <div class="reveal">
-        <span class="tag">Specialty coffee, delivered</span>
-        <h1>Coffee worth <em>waking&nbsp;up</em> for.</h1>
-        <p class="lede">Exceptional beans from twelve origins, roasted to order and delivered on your schedule. No stale shelves — just remarkable coffee, always fresh.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#subscribe">Start your subscription</a>
-          <a class="btn btn-ghost" href="#shop">Explore the collection</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><b>40k+</b><span>Happy subscribers</span></div>
-          <div class="stat"><b>4.9★</b><span>Average rating</span></div>
-          <div class="stat"><b>48h</b><span>Roast to door</span></div>
+    <div class="container">
+      <h1 class="hero-title reveal">
+        <span class="row">Coffee <span class="stroke">worth</span></span>
+        <span class="row"><em>waking&nbsp;up</em> <span class="chip grain-img"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&amp;w=400&amp;auto=format&amp;fit=crop" alt="" loading="eager"></span> for.</span>
+      </h1>
+
+      <div class="hero-lower">
+        <p class="hero-copy reveal" style="--d:.15s">Twelve origins, one obsession. We roast every Monday in Portland and ship within 48 hours of the drum — because great coffee has a countdown, not a shelf life.</p>
+        <div class="hero-ctas reveal" style="--d:.25s">
+          <a class="btn btn-solid" href="#subscribe">Start subscription
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-line" href="#shop">Browse roasts</a>
         </div>
       </div>
-      <div class="hero-visual reveal" style="--d:.15s" aria-hidden="true">
-        <div class="hero-blob"></div>
-        <svg class="cup" viewBox="0 0 220 200">
-          <g class="steam">
-            <path d="M85 34c-7 13 7 17 0 30"/>
-            <path d="M110 26c-7 15 9 19 0 38"/>
-            <path d="M135 34c-7 13 7 17 0 30"/>
-          </g>
-          <ellipse cx="106" cy="170" rx="64" ry="10" fill="#241A12" opacity=".16"/>
-          <path d="M158 92h12a17 17 0 0 1 0 34h-14" fill="none" stroke="#241A12" stroke-width="11"/>
-          <path d="M54 82h104v42a36 36 0 0 1-36 36h-32a36 36 0 0 1-36-36z" fill="#241A12"/>
-          <rect x="54" y="102" width="104" height="13" fill="#C2703D"/>
+
+      <figure class="hero-figure reveal" style="--d:.2s">
+        <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
+          <svg class="disc" x="0" y="0" width="120" height="120" viewBox="0 0 120 120">
+            <defs><path id="circ" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+            <text><textPath href="#circ">roasted to order · small batch · portland ·&#160;</textPath></text>
+          </svg>
+          <ellipse cx="60" cy="60" rx="12.5" ry="18.5" fill="var(--paper)" stroke="currentColor" stroke-width="2"/>
+          <path d="M60 42v36" stroke="currentColor" stroke-width="2"/>
         </svg>
-        <span class="bean b1"></span>
-        <span class="bean b2"></span>
-        <span class="bean b3"></span>
-        <span class="bean b4"></span>
-        <div class="hero-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9E5527" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="13" height="10" rx="2"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>
-          Free carbon-neutral shipping
+        <div class="grain-img hero-frame" data-parallax>
+          <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="Barista pouring latte art at Ember and Oak roastery" fetchpriority="high">
         </div>
+        <figcaption class="sr-only"></figcaption>
+      </figure>
+
+      <div class="hero-meta reveal" style="--d:.1s">
+        <span>Est. 2019 — Portland, OR</span>
+        <span>12 Origins</span>
+        <span>4.9 Average Rating</span>
+        <span>40k+ Subscribers</span>
       </div>
     </div>
   </section>
+
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>Small-batch roasted</span><span>Ethically sourced</span><span>Free carbon-neutral shipping</span><span>Pause anytime</span><span>Fresh within 48 hours</span>
-      <span>Small-batch roasted</span><span>Ethically sourced</span><span>Free carbon-neutral shipping</span><span>Pause anytime</span><span>Fresh within 48 hours</span>
+      <span>Direct trade sourced</span><span>Roasted every Monday</span><span>Free carbon-neutral shipping</span><span>Pause anytime</span><span>Fresh within 48 hours</span>
+      <span>Direct trade sourced</span><span>Roasted every Monday</span><span>Free carbon-neutral shipping</span><span>Pause anytime</span><span>Fresh within 48 hours</span>
     </div>
   </div>
+  <section class="values">
+    <div class="container values-grid">
+      <div class="value reveal">
+        <span class="idx">(01)</span>
+        <h3>Direct trade, no shortcuts</h3>
+        <p>We pay two to three times commodity price and visit every farm we buy from. Good coffee starts with good contracts.</p>
+      </div>
+      <div class="value reveal" style="--d:.1s">
+        <span class="idx">(02)</span>
+        <h3>Roasted to order</h3>
+        <p>Nothing sits in a warehouse. Your beans meet the drum after you click buy — never before.</p>
+      </div>
+      <div class="value reveal" style="--d:.2s">
+        <span class="idx">(03)</span>
+        <h3>Delivered carbon-neutral</h3>
+        <p>Every parcel ships plastic-free and offset through verified reforestation projects in the origins we source from.</p>
+      </div>
+    </div>
+  </section>
 
   <section id="shop">
     <div class="container">
-      <div class="split-head">
-        <div class="section-head reveal">
-          <span class="tag">The collection</span>
-          <h2>Small-batch roasts, big personality.</h2>
-          <p>Six rotating single origins and blends, cupped and scored by our Q-graders before they ever reach your mug.</p>
+      <div class="shop-head">
+        <div class="reveal">
+          <span class="eyebrow mono">The Collection</span>
+          <h2>Six roasts,<br>each with a <em>point of view.</em></h2>
         </div>
-        <div class="filters reveal" style="--d:.1s" role="group" aria-label="Filter by roast">
-          <button class="filter active" data-filter="all">All coffee</button>
-          <button class="filter" data-filter="light">Light</button>
-          <button class="filter" data-filter="medium">Medium</button>
-          <button class="filter" data-filter="dark">Dark</button>
+        <div class="filters reveal" style="--d:.15s" role="group" aria-label="Filter by roast">
+          <button class="filter active" data-filter="all">All · 06</button>
+          <button class="filter" data-filter="light">Light · 02</button>
+          <button class="filter" data-filter="medium">Medium · 02</button>
+          <button class="filter" data-filter="dark">Dark · 02</button>
         </div>
       </div>
 
       <div class="grid">
         <article class="card reveal" data-roast="light">
-          <div class="card-media tint-1">
-            <span class="roast-pill">Light <span class="roast-dots"><i class="on"></i><i></i><i></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-1">
+            <span class="roast-pill">Light roast</span>
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Sunrise Blend, a bright light roast" loading="lazy">
           </div>
-          <h3>Sunrise Blend</h3>
-          <ul class="notes"><li>Citrus</li><li>Honey</li><li>Jasmine</li></ul>
-          <div class="card-foot">
-            <span class="price">$18 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Sunrise Blend to cart">+</button>
+          <div class="card-info">
+            <h3>Sunrise Blend</h3>
+            <p class="notes">Citrus · Honey · Jasmine</p>
+            <div class="card-foot">
+              <span class="price">$18 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Sunrise Blend to cart">+</button>
+            </div>
           </div>
         </article>
 
         <article class="card reveal" style="--d:.08s" data-roast="medium">
-          <div class="card-media tint-5">
-            <span class="roast-pill">Medium <span class="roast-dots"><i class="on"></i><i class="on"></i><i></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-5">
+            <span class="roast-pill">Medium roast</span>
+            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Ember House medium roast beans" loading="lazy">
           </div>
-          <h3>Ember House</h3>
-          <ul class="notes"><li>Cocoa</li><li>Caramel</li><li>Almond</li></ul>
-          <div class="card-foot">
-            <span class="price">$16 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Ember House to cart">+</button>
+          <div class="card-info">
+            <h3>Ember House</h3>
+            <p class="notes">Cocoa · Caramel · Almond</p>
+            <div class="card-foot">
+              <span class="price">$16 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Ember House to cart">+</button>
+            </div>
           </div>
         </article>
 
         <article class="card reveal" style="--d:.16s" data-roast="light">
-          <div class="card-media tint-2">
-            <span class="roast-pill">Light <span class="roast-dots"><i class="on"></i><i></i><i></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-2">
+            <span class="roast-pill">Light roast</span>
+            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Yirgacheffe Gold brewed over ice" loading="lazy">
           </div>
-          <h3>Yirgacheffe Gold</h3>
-          <ul class="notes"><li>Bergamot</li><li>Peach</li><li>Black tea</li></ul>
-          <div class="card-foot">
-            <span class="price">$21 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Yirgacheffe Gold to cart">+</button>
+          <div class="card-info">
+            <h3>Yirgacheffe Gold</h3>
+            <p class="notes">Bergamot · Peach · Black tea</p>
+            <div class="card-foot">
+              <span class="price">$21 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Yirgacheffe Gold to cart">+</button>
+            </div>
           </div>
         </article>
 
         <article class="card reveal" data-roast="medium">
-          <div class="card-media tint-3">
-            <span class="roast-pill">Medium <span class="roast-dots"><i class="on"></i><i class="on"></i><i></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-3">
+            <span class="roast-pill">Medium roast</span>
+            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Colombia Huila, a balanced medium roast" loading="lazy">
           </div>
-          <h3>Colombia Huila</h3>
-          <ul class="notes"><li>Red apple</li><li>Toffee</li><li>Plum</li></ul>
-          <div class="card-foot">
-            <span class="price">$19 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Colombia Huila to cart">+</button>
+          <div class="card-info">
+            <h3>Colombia Huila</h3>
+            <p class="notes">Red apple · Toffee · Plum</p>
+            <div class="card-foot">
+              <span class="price">$19 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Colombia Huila to cart">+</button>
+            </div>
           </div>
         </article>
 
         <article class="card reveal" style="--d:.08s" data-roast="dark">
-          <div class="card-media tint-6">
-            <span class="roast-pill">Dark <span class="roast-dots"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-6">
+            <span class="roast-pill">Dark roast</span>
+            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Midnight Oak dark roast beans" loading="lazy">
           </div>
-          <h3>Midnight Oak</h3>
-          <ul class="notes"><li>Dark chocolate</li><li>Smoke</li><li>Molasses</li></ul>
-          <div class="card-foot">
-            <span class="price">$17 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Midnight Oak to cart">+</button>
+          <div class="card-info">
+            <h3>Midnight Oak</h3>
+            <p class="notes">Dark chocolate · Smoke · Molasses</p>
+            <div class="card-foot">
+              <span class="price">$17 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Midnight Oak to cart">+</button>
+            </div>
           </div>
         </article>
 
         <article class="card reveal" style="--d:.16s" data-roast="dark">
-          <div class="card-media tint-4">
-            <span class="roast-pill">Dark <span class="roast-dots"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
-            <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+          <div class="card-media grain-img tint-4">
+            <span class="roast-pill">Dark roast</span>
+            <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Sumatra Reserve, an earthy dark roast" loading="lazy">
           </div>
-          <h3>Sumatra Reserve</h3>
-          <ul class="notes"><li>Cedar</li><li>Brown sugar</li><li>Dried fig</li></ul>
-          <div class="card-foot">
-            <span class="price">$20 <small>/ 250g</small></span>
-            <button class="add-btn" aria-label="Add Sumatra Reserve to cart">+</button>
+          <div class="card-info">
+            <h3>Sumatra Reserve</h3>
+            <p class="notes">Cedar · Brown sugar · Dried fig</p>
+            <div class="card-foot">
+              <span class="price">$20 <small>/ 250g</small></span>
+              <button class="add-btn" aria-label="Add Sumatra Reserve to cart">+</button>
+            </div>
           </div>
         </article>
       </div>
     </div>
   </section>
-  <section id="process" class="steps">
+
+  <section class="banner">
+    <div class="banner-bg"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&amp;w=2000&amp;auto=format&amp;fit=crop" alt="" loading="lazy"></div>
     <div class="container">
-      <div class="section-head reveal">
-        <span class="tag">How it works</span>
-        <h2>From cherry to cup, effortlessly.</h2>
-        <p>A subscription that adapts to you — not the other way around.</p>
-      </div>
-      <div class="steps-grid">
-        <div class="step reveal">
-          <div class="step-num">01</div>
-          <h3>Choose your plan</h3>
-          <p>Pick your beans, grind and cadence — weekly, fortnightly or monthly. Pause, swap or cancel anytime.</p>
-        </div>
-        <div class="step reveal" style="--d:.1s">
-          <div class="step-num">02</div>
-          <h3>Roasted &amp; shipped free</h3>
-          <p>We roast after you order, so every bag lands within 48 hours of leaving the drum. Shipping is always on us.</p>
-        </div>
-        <div class="step reveal" style="--d:.2s">
-          <div class="step-num">03</div>
-          <h3>Brew, rate &amp; refine</h3>
-          <p>Rate each delivery and our roasters automatically tune future picks to your evolving palate.</p>
-        </div>
+      <div class="banner-inner reveal">
+        <span class="eyebrow mono" style="color:rgba(241,239,232,.55)">Freshness Policy</span>
+        <h2>We roast on <em>Mondays only.</em></h2>
+        <p>Aroma peaks at day five and fades by week three. Supermarket coffee is already tired when you buy it — ours hasn't woken up yet. Reserve a bag from this week's batch and taste the difference for yourself.</p>
+        <a class="btn" href="#subscribe">Reserve this week's batch
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+        </a>
       </div>
     </div>
   </section>
 
-  <section id="reviews">
-    <div class="container quote reveal">
-      <blockquote>The best coffee decision I have ever made. Every box feels hand-picked, and my mornings have genuinely improved.</blockquote>
+  <section id="process" class="process">
+    <div class="container">
+      <div class="process-head reveal">
+        <span class="eyebrow mono">How It Works</span>
+        <h2>From cherry to cup, <em>effortlessly.</em></h2>
+      </div>
+      <div class="process-rows reveal" style="--d:.1s">
+        <div class="prow">
+          <span class="num">01</span>
+          <h3>Choose your plan</h3>
+          <p>Pick your beans and cadence — weekly, fortnightly or monthly. Pause, swap or cancel whenever life happens.</p>
+        </div>
+        <div class="prow">
+          <span class="num">02</span>
+          <h3>Roasted &amp; shipped free</h3>
+          <p>We roast after you order. Every bag lands within 48 hours of leaving the drum, anywhere in the US.</p>
+        </div>
+        <div class="prow">
+          <span class="num">03</span>
+          <h3>Brew, rate &amp; refine</h3>
+          <p>Rate each delivery and our roasters quietly tune your future picks to your evolving palate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="reviews" class="quote">
+    <div class="container reveal">
+      <blockquote><span class="qm">“</span>The best coffee decision I have ever made. Every box feels hand-picked, and my mornings have genuinely improved.<span class="qm">”</span></blockquote>
       <cite>Maya R. — Subscriber since 2023</cite>
     </div>
   </section>
 
-  <section id="subscribe" style="padding-top:0">
+  <section id="subscribe" class="subscribe">
     <div class="container">
-      <div class="newsletter-band reveal">
-        <div class="newsletter-inner">
-          <h2>Your mornings just got 15% better.</h2>
-          <p>Pick a delivery cadence and leave the rest to us — roasts ship within 48 hours of leaving the drum. First box is 15% off.</p>
+      <div class="subscribe-band reveal">
+        <div class="subscribe-bg"><img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&amp;w=2000&amp;auto=format&amp;fit=crop" alt="" loading="lazy"></div>
+        <div class="subscribe-inner">
+          <span class="eyebrow mono">Begin Subscription</span>
+          <h2>Your mornings just got <em>15% better.</em></h2>
+          <p>Pick a cadence and leave the rest to us — roasts ship within 48 hours of leaving the drum. First box is on discount, cancel anytime with one click.</p>
           <div class="plan-picker" role="group" aria-label="Delivery cadence">
             <button type="button" class="plan-pill" data-plan="weekly">Weekly</button>
             <button type="button" class="plan-pill selected" data-plan="fortnightly">Every 2 weeks</button>
             <button type="button" class="plan-pill" data-plan="monthly">Monthly</button>
           </div>
           <form class="nl-form" id="nlForm" novalidate>
-            <input type="email" id="nlEmail" placeholder="you@example.com" aria-label="Email address" required>
-            <button class="btn btn-accent" type="submit" id="nlBtn">Start my plan</button>
+            <input type="email" id="nlEmail" placeholder="your@email.com" aria-label="Email address" required>
+            <button type="submit" id="nlBtn">Start my plan
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+            </button>
           </form>
           <p class="nl-msg" id="nlMsg" aria-live="polite"></p>
-          <p class="nl-small">No spam. Unsubscribe anytime.</p>
+          <p class="nl-small">No spam · Unsubscribe anytime</p>
         </div>
       </div>
     </div>
@@ -522,36 +603,34 @@ footer ul a:hover{color:var(--accent-deep)}
   <div class="container">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a class="logo" href="#">
-          <span class="logo-mark">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" fill="#FAF6EF"/><path d="M12 2.5v19" stroke="#C2703D" stroke-width="2"/></svg>
-          </span>
-          Ember &amp; Oak
-        </a>
-        <p>Small-batch specialty coffee, roasted to order and delivered with care since 2019.</p>
+        <a class="logo" href="#" style="color:var(--paper)">Ember &amp; Oak<sup>®</sup></a>
+        <p>Small-batch specialty coffee, roasted to order in Portland, Oregon since 2019.</p>
       </div>
       <div>
         <h4>Shop</h4>
-        <ul><li><a href="#shop">All coffee</a></li><li><a href="#subscribe">Subscriptions</a></li><li><a href="#">Gift cards</a></li><li><a href="#">Merch</a></li></ul>
+        <ul><li><a href="#shop">All coffee</a></li><li><a href="#subscribe">Subscriptions</a></li><li><a href="#">Gift cards</a></li><li><a href="#">Brew gear</a></li></ul>
       </div>
       <div>
         <h4>Company</h4>
-        <ul><li><a href="#">About us</a></li><li><a href="#">Journal</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul>
+        <ul><li><a href="#">Our story</a></li><li><a href="#">Origins</a></li><li><a href="#">Journal</a></li><li><a href="#">Careers</a></li></ul>
       </div>
       <div>
         <h4>Support</h4>
         <ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Privacy</a></li></ul>
       </div>
     </div>
+    <div class="foot-word" aria-hidden="true">Ember <span>&amp;</span> Oak</div>
     <div class="foot-bottom">
       <span>© <span id="year">2026</span> Ember &amp; Oak Coffee Co.</span>
-      <span>Crafted with warmth.</span>
+      <span id="clock">Portland — --:--</span>
+      <span>Crafted with warmth</span>
     </div>
   </div>
 </footer>
+
 <script>
 const header = document.getElementById('header');
-const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 24);
 onScroll();
 addEventListener('scroll', onScroll, { passive: true });
 
@@ -572,6 +651,17 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const px = document.querySelector('[data-parallax] img');
+  if (px) addEventListener('scroll', () => {
+    const r = px.parentElement.getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0) {
+      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+      px.style.transform = `translateY(${p * -34}px) scale(1.12)`;
+    }
+  }, { passive: true });
+}
 
 const filterBtns = document.querySelectorAll('.filter');
 filterBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -617,8 +707,8 @@ form.addEventListener('submit', async e => {
     return;
   }
   nlBtn.disabled = true;
-  const original = nlBtn.textContent;
-  nlBtn.textContent = 'Starting…';
+  const original = nlBtn.firstChild.textContent;
+  nlBtn.firstChild.textContent = 'Starting… ';
   try {
     const r = await fetch('/api/subscriptions', {
       method: 'POST',
@@ -639,10 +729,18 @@ form.addEventListener('submit', async e => {
     msg.className = 'nl-msg err';
   } finally {
     nlBtn.disabled = false;
-    nlBtn.textContent = original;
+    nlBtn.firstChild.textContent = original;
   }
 });
 
+const PHOTOS = {
+  'sunrise-blend': 'photo-1495474472287-4d71bcdd2085',
+  'ember-house': 'photo-1447933601403-0c6688de566e',
+  'yirgacheffe-gold': 'photo-1511920170033-f8396924c348',
+  'colombia-huila': 'photo-1509042239860-f550ce710b93',
+  'midnight-oak': 'photo-1514432324607-a09d9b4aefdd',
+  'sumatra-reserve': 'photo-1498804103079-a6351b050096'
+};
 (async () => {
   if (location.protocol === 'file:') return;
   try {
@@ -650,23 +748,32 @@ form.addEventListener('submit', async e => {
     if (!r.ok) return;
     const data = await r.json();
     if (!data.ok || !Array.isArray(data.products) || data.products.length === 0) return;
-    const dots = { light: 1, medium: 2, dark: 3 };
     const grid = document.querySelector('.grid');
-    grid.innerHTML = data.products.map(p => `
-      <article class="card reveal visible" data-roast="${p.roast}">
-        <div class="card-media ${p.tint}">
-          <span class="roast-pill">${p.roast.charAt(0).toUpperCase() + p.roast.slice(1)} <span class="roast-dots">${[0, 1, 2].map(i => `<i${i < dots[p.roast] ? ' class="on"' : ''}></i>`).join('')}</span></span>
-          <svg class="bag" aria-hidden="true"><use href="#bag"/></svg>
+    grid.innerHTML = data.products.map((p, i) => `
+      <article class="card reveal visible" data-roast="${p.roast}" style="--d:${(i % 3) * 0.08}s">
+        <div class="card-media grain-img ${p.tint}">
+          <span class="roast-pill">${p.roast} roast</span>
+          <img src="https://images.unsplash.com/${PHOTOS[p.slug] || 'photo-1447933601403-0c6688de566e'}?q=80&w=800&auto=format&fit=crop" alt="${p.name}, a ${p.roast} roast" loading="lazy">
         </div>
-        <h3>${p.name}</h3>
-        <ul class="notes">${p.notes.map(n => `<li>${n}</li>`).join('')}</ul>
-        <div class="card-foot">
-          <span class="price">$${Math.round(p.priceCents / 100)} <small>/ 250g</small></span>
-          <button class="add-btn" aria-label="Add ${p.name} to cart">+</button>
+        <div class="card-info">
+          <h3>${p.name}</h3>
+          <p class="notes">${p.notes.join(' · ')}</p>
+          <div class="card-foot">
+            <span class="price">$${Math.round(p.priceCents / 100)} <small>/ 250g</small></span>
+            <button class="add-btn" aria-label="Add ${p.name} to cart">+</button>
+          </div>
         </div>
       </article>`).join('');
   } catch {}
 })();
+
+function tick() {
+  const t = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const el = document.getElementById('clock');
+  if (el) el.textContent = `Portland — ${t}`;
+}
+tick();
+setInterval(tick, 30000);
 
 document.getElementById('year').textContent = new Date().getFullYear();
 </script>
