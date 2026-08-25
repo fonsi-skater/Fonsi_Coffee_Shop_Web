@@ -1,0 +1,16 @@
+{
+  "name": "ember-oak-coffee",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ember & Oak — coffee subscription landing page with Vercel serverless API",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "npx vercel dev"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  }
+}
